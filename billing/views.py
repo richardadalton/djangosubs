@@ -43,3 +43,23 @@ def make_payment(request):
             )
 
     return redirect("profile")
+    
+
+def subscribe(request):
+    if request.method == "POST":
+        plan = request.POST['plan']
+        
+        subscription = stripe.Subscription.create(
+          customer=request.user.profile.stripe_id,
+          items=[{'plan': plan}],
+        )
+        request.user.profile.subscription_id = subscription.id
+        request.user.profile.save()
+        return redirect('profile')
+    else:
+        return render(request, 'billing/subscribe.html')
+        
+        
+def unsubscribe(request):
+    stripe.Subscription.modify(request.user.profile.subscription_id, cancel_at_period_end=True)
+    return redirect('profile')

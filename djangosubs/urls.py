@@ -16,14 +16,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from accounts.views import home, signup, profile
+from billing.views import add_credit_card, remove_credit_card, make_payment
 from django.views.static import serve
 from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', signup, name='signup'),
     path('accounts/profile/', profile, name='profile'),
-    path('', home, name='home'),
+    path('billing/add_credit_card/', add_credit_card, name='add_credit_card'),
+    path('billing/remove_credit_card/', remove_credit_card, name='remove_credit_card'),
+    path('billing/make_payment/', make_payment, name='make_payment'),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),
 ]
